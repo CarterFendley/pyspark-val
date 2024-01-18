@@ -1,19 +1,17 @@
 # pyspark-test
 
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-black.svg)](https://github.com/ambv/black)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Unit Test](https://github.com/debugger24/pyspark-test/workflows/Unit%20Test/badge.svg?branch=main)](https://github.com/debugger24/pyspark-test/actions?query=workflow%3A%22Unit+Test%22)
-[![PyPI version](https://badge.fury.io/py/pyspark-test.svg)](https://badge.fury.io/py/pyspark-test)
-[![Downloads](https://pepy.tech/badge/pyspark-test)](https://pepy.tech/project/pyspark-test)
+[![PyPI version](https://badge.fury.io/py/pyspark-val.svg)](https://badge.fury.io/py/pyspark-val)
+[![Downloads](https://pepy.tech/badge/pyspark-val)](https://pepy.tech/project/pyspark-val)
 
-Check that left and right spark DataFrame are equal.
-
-This function is intended to compare two spark DataFrames and output any differences. It is inspired from pandas testing module but for pyspark, and for use in unit tests. Additional parameters allow varying the strictness of the equality checks performed.
+PySpark validation & testing tooling.
 
 # Installation
 
 ```
-pip install pyspark-test
+pip install pyspark-val
 ```
 
 # Usage
