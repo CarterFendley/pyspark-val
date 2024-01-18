@@ -10,7 +10,7 @@ except ImportError:
     has_connect_deps = False
 
 
-def _check_isinstance_df(left: Any, right: Any):
+def _check_isinstance_df(test: Any, truth: Any):
     types_to_test = [pyspark.sql.DataFrame]
     msg_string = ""
     # If Spark Connect dependencies are not available, the input is not going to be a Spark Connect
@@ -19,80 +19,80 @@ def _check_isinstance_df(left: Any, right: Any):
         types_to_test.append(CDF)
         msg_string = " or {CDF}"
 
-    left_good = any(map(lambda x: isinstance(left, x), types_to_test))
-    right_good = any(map(lambda x: isinstance(right, x), types_to_test))
+    test_good = any(map(lambda x: isinstance(test, x), types_to_test))
+    truth_good = any(map(lambda x: isinstance(truth, x), types_to_test))
     assert (
-        left_good
-    ), f"Left expected type {pyspark.sql.DataFrame}{msg_string}, found {type(left)} instead"
+        test_good
+    ), f"Expected type {pyspark.sql.DataFrame}{msg_string}, found {type(test)} instead"
     assert (
-        right_good
-    ), f"Right expected type {pyspark.sql.DataFrame}{msg_string}, found {type(right)} instead"
+        truth_good
+    ), f"Expected type {pyspark.sql.DataFrame}{msg_string}, found {type(truth)} instead"
 
     # Check that both sides are of the same DataFrame type.
-    assert type(left) == type(
-        right
-    ), f"Left and right DataFrames are not of the same type: {type(left)} != {type(right)}"
+    assert type(test) == type(
+        truth
+    ), f"Test and truth DataFrames are not of the same type: {type(test)} != {type(truth)}"
 
 
 def _check_columns(
     check_columns_in_order: bool,
-    left_df: pyspark.sql.DataFrame,
-    right_df: pyspark.sql.DataFrame,
+    test_df: pyspark.sql.DataFrame,
+    truth_df: pyspark.sql.DataFrame,
 ):
     if check_columns_in_order:
-        assert left_df.columns == right_df.columns, "df columns name mismatch"
+        assert test_df.columns == truth_df.columns, "df columns name mismatch"
     else:
-        assert sorted(left_df.columns) == sorted(
-            right_df.columns
+        assert sorted(test_df.columns) == sorted(
+            truth_df.columns
         ), "df columns name mismatch"
 
 
 def _check_schema(
     check_columns_in_order: bool,
-    left_df: pyspark.sql.DataFrame,
-    right_df: pyspark.sql.DataFrame,
+    test_df: pyspark.sql.DataFrame,
+    truth_df: pyspark.sql.DataFrame,
 ):
     if check_columns_in_order:
-        assert left_df.dtypes == right_df.dtypes, "df schema type mismatch"
+        assert test_df.dtypes == truth_df.dtypes, "df schema type mismatch"
     else:
-        assert sorted(left_df.dtypes, key=lambda x: x[0]) == sorted(
-            right_df.dtypes, key=lambda x: x[0]
+        assert sorted(test_df.dtypes, key=lambda x: x[0]) == sorted(
+            truth_df.dtypes, key=lambda x: x[0]
         ), "df schema type mismatch"
 
 
 def _check_df_content(
-    left_df: pyspark.sql.DataFrame,
-    right_df: pyspark.sql.DataFrame,
+    test_df: pyspark.sql.DataFrame,
+    truth_df: pyspark.sql.DataFrame,
 ):
-    left_df_list = left_df.collect()
-    right_df_list = right_df.collect()
+    test_df_list = test_df.collect()
+    truth_df_list = truth_df.collect()
 
-    for row_index in range(len(left_df_list)):
-        for column_name in left_df.columns:
-            left_cell = left_df_list[row_index][column_name]
-            right_cell = right_df_list[row_index][column_name]
-            if left_cell == right_cell:
+    for row_index in range(len(test_df_list)):
+        for column_name in test_df.columns:
+            test_cell = test_df_list[row_index][column_name]
+            truth_cell = truth_df_list[row_index][column_name]
+            if test_cell == truth_cell:
                 assert True
-            elif left_cell is None and right_cell is None:
+            elif test_cell is None and truth_cell is None:
                 assert True
-            # elif math.isnan(left_cell) and math.isnan(right_cell):
+            # elif math.isnan(test_cell) and math.isnan(truth_cell):
             #     assert True
             else:
-                msg = f"Data mismatch\n\nRow = {row_index + 1} : Column = {column_name}\n\nACTUAL: {left_cell}\nEXPECTED: {right_cell}\n"
+                msg = f"Data mismatch\n\nRow = {row_index + 1} : Column = {column_name}\n\nACTUAL: {test_cell}\nEXPECTED: {truth_cell}\n"
                 assert False, msg
 
 
-def _check_row_count(left_df, right_df):
-    left_df_count = left_df.count()
-    right_df_count = right_df.count()
+def _check_row_count(test_df, truth_df):
+    test_df_count = test_df.count()
+    truth_df_count = truth_df.count()
     assert (
-        left_df_count == right_df_count
-    ), f"Number of rows are not same.\n\nActual Rows: {left_df_count}\nExpected Rows: {right_df_count}\n"
+        test_df_count == truth_df_count
+    ), f"Number of rows are not same.\n\nActual Rows: {test_df_count}\nExpected Rows: {truth_df_count}\n"
 
 
 def assert_pyspark_df_equal(
-    left_df: pyspark.sql.DataFrame,
-    right_df: pyspark.sql.DataFrame,
+    test_df: pyspark.sql.DataFrame,
+    truth_df: pyspark.sql.DataFrame,
     check_dtype: bool = True,
     check_column_names: bool = False,
     check_columns_in_order: bool = False,
@@ -102,8 +102,8 @@ def assert_pyspark_df_equal(
     Used to test if two dataframes are same or not
 
     Args:
-        left_df (pyspark.sql.DataFrame): Left Dataframe
-        right_df (pyspark.sql.DataFrame): Right Dataframe
+        test_df (pyspark.sql.DataFrame): Dataframe to test
+        truth_df (pyspark.sql.DataFrame): Dataframe to expect
         check_dtype (bool, optional): Comapred both dataframe have same column and colum type or not. If using check_dtype then check_column_names is not required. Defaults to True.
         check_column_names (bool, optional): Comapare both dataframes have same column or not. Defaults to False.
         check_columns_in_order (bool, optional): Check columns in order. Defaults to False.
@@ -111,23 +111,23 @@ def assert_pyspark_df_equal(
     """
 
     # Check if
-    _check_isinstance_df(left_df, right_df)
+    _check_isinstance_df(test_df, truth_df)
 
     # Check Column Names
     if check_column_names:
-        _check_columns(check_columns_in_order, left_df, right_df)
+        _check_columns(check_columns_in_order, test_df, truth_df)
 
     # Check Column Data Types
     if check_dtype:
-        _check_schema(check_columns_in_order, left_df, right_df)
+        _check_schema(check_columns_in_order, test_df, truth_df)
 
     # Check number of rows
-    _check_row_count(left_df, right_df)
+    _check_row_count(test_df, truth_df)
 
     # Sort df
     if order_by:
-        left_df = left_df.orderBy(order_by)
-        right_df = right_df.orderBy(order_by)
+        test_df = test_df.orderBy(order_by)
+        truth_df = truth_df.orderBy(order_by)
 
     # Check dataframe content
-    _check_df_content(left_df, right_df)
+    _check_df_content(test_df, truth_df)
