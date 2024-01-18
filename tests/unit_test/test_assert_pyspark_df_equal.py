@@ -11,8 +11,8 @@ from pyspark.sql.types import (
     StructType,
 )
 
-from src.pyspark_test import assert_pyspark_df_equal
-from src.pyspark_test import _check_isinstance_df
+from pyspark_val import assert_pyspark_df_equal
+from pyspark_val.assert_equals import _check_isinstance_df
 
 
 class TestAssertPysparkDfEqual:

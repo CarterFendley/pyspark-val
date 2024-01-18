@@ -14,7 +14,6 @@ setup(
     author="Rahul Kumar, Carter Fendley",
     keywords="assert pyspark unit test testing compare validation",
     license="MIT",
-    py_modules=["pyspark_test"],
-    package_dir={"": "src"},
+    packages=["pyspark_val"],
     install_requires=["pyspark>=2.1.2"],
 )

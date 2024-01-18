@@ -7,7 +7,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY src src
-COPY tests tests
+COPY . .
+RUN pip install .
 
 RUN pytest --testdox
