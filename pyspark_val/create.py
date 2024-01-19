@@ -3,7 +3,7 @@ from collections.abc import Iterable
 
 from pyspark.sql import SparkSession, DataFrame
 
-def from_dict(spark: SparkSession, d: Dict[str, Iterable]) -> DataFrame:
+def df_from_dict(spark: SparkSession, d: Dict[str, Iterable]) -> DataFrame:
     # Assert each element in the dict is a iterable with same size
     size = None
     for val in d.values():

@@ -9,7 +9,8 @@ from pyspark.sql.types import (
     StructType,
 )
 
-from pyspark_val import from_dict, assert_pyspark_df_equal
+from pyspark_val.create import df_from_dict
+from pyspark_val.assertion import dfs_equal
 
 def test_simple(spark_session: SparkSession):
     expect = spark_session.createDataFrame(
@@ -27,7 +28,7 @@ def test_simple(spark_session: SparkSession):
         ),
     )
 
-    test = from_dict(
+    test = df_from_dict(
         spark_session,
         {
             'col_a': [datetime.date(2020, 1, 1), datetime.date(2021, 1, 1)],
@@ -37,4 +38,4 @@ def test_simple(spark_session: SparkSession):
         }
     )
 
-    assert_pyspark_df_equal(test, expect)
+    dfs_equal(test, expect)

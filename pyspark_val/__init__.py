@@ -1,6 +1,5 @@
 import pytest
 
-pytest.register_assert_rewrite("pyspark_val.assert_equals")
+pytest.register_assert_rewrite("pyspark_val.assertion")
 
-from .assert_equals import *
-from .create_df import *
+from ._backwards import assert_pyspark_df_equal

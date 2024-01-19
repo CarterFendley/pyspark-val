@@ -90,7 +90,7 @@ def _check_row_count(test_df, truth_df):
     ), f"Number of rows are not same.\n\nActual Rows: {test_df_count}\nExpected Rows: {truth_df_count}\n"
 
 
-def assert_pyspark_df_equal(
+def dfs_equal(
     test_df: pyspark.sql.DataFrame,
     truth_df: pyspark.sql.DataFrame,
     check_dtype: bool = True,
