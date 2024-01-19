@@ -27,10 +27,10 @@ def df_from_dict(spark: SparkSession, data: Dict[str, Iterable]) -> DataFrame:
         # Validate uniform type
         col_type = None
         for x in val:
-            if col_type is None:
+            if col_type is None and x is not None:
                 col_type = type(x)
             else:
-                assert type(x) == col_type and x is not None, "The dictionary iterables should only contain values with the same type and 'None'"
+                assert type(x) == col_type or x is None, "The dictionary iterables should only contain values with the same type and 'None'"
 
 
     rows = []
