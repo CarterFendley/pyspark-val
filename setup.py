@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name="pyspark_val",
-    version="0.1.2",
+    version="0.1.3",
     description="PySpark validation & testing tooling",
     long_description=readme(),
     long_description_content_type="text/markdown",
