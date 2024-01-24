@@ -2,7 +2,9 @@ import datetime
 from pyspark.sql import SparkSession
 from pyspark.sql.types import (
     DateType,
+    FloatType,
     DoubleType,
+    IntegerType,
     LongType,
     StringType,
     StructField,
@@ -63,6 +65,33 @@ def test_null(spark_session: SparkSession):
             'col_b': ["foo", "bar"],
             'col_c': [None, 3.145],
             'col_d': [10, None]
+        }
+    )
+
+    dfs_equal(test, expect)
+
+def test_with_schema(spark_session: SparkSession):
+    expect = spark_session.createDataFrame(
+        data=[
+            [0, 0.0],
+            [1, 1.0]
+        ],
+        schema=StructType([
+            StructField('col_int', IntegerType(), True),
+            StructField('col_float', FloatType(), True)
+        ])
+    )
+
+    test = df_from_dict(
+        spark=spark_session,
+        data={
+            'col_int': [0, 1],
+            'col_float': [0.0, 1.0]
+        },
+        types={
+            # NOTE: PySpark will default to bigint, double
+            'col_int': IntegerType(),
+            'col_float': FloatType()
         }
     )
 

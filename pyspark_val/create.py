@@ -2,14 +2,21 @@ from typing import Dict
 from collections.abc import Iterable
 
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.types import DataType
+import pyspark.sql.functions as F
 
-def df_from_dict(spark: SparkSession, data: Dict[str, Iterable]) -> DataFrame:
+def df_from_dict(
+    spark: SparkSession,
+    data: Dict[str, Iterable],
+    types: Dict[str, DataType] = None
+) -> DataFrame:
     """
     This function provides an easy way to create a DataFrame from a python dictionary of iterable values.
 
     Args:
         spark (SparkSession): The spark session to use.
         data (Dict[str, Iterable]): The data to create a DataFrame from
+        types (Dict[str, DataType], optional): Types for subset or all columns to override spark's schema inference. Defaults to None.
 
     Returns:
         DataFrame: _description_
@@ -39,4 +46,10 @@ def df_from_dict(spark: SparkSession, data: Dict[str, Iterable]) -> DataFrame:
 
         rows.append(row)
 
-    return spark.sparkContext.parallelize(rows).toDF(list(data.keys()))
+    df = spark.sparkContext.parallelize(rows).toDF(list(data.keys()))
+
+    if types is not None:
+        for col, col_type in types.items():
+            df = df.withColumn(col, F.col(col).cast(col_type))
+
+    return df
