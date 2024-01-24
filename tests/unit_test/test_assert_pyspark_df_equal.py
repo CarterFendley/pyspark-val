@@ -11,7 +11,7 @@ from pyspark.sql.types import (
     StructType,
 )
 
-from pyspark_val.assertion import dfs_equal, _check_isinstance_df
+from pyspark_val.assertion import assert_dfs_equal, _check_isinstance_df
 
 
 class TestAssertPysparkDfEqual:
@@ -46,7 +46,7 @@ class TestAssertPysparkDfEqual:
                 ]
             ),
         )
-        dfs_equal(left_df, right_df)
+        assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_one_is_not_pyspark_df(
         self, spark_session: pyspark.sql.SparkSession
@@ -70,7 +70,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Right expected type <class 'pyspark.sql.dataframe.DataFrame'> or .*?, found <class 'str'> instead",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_string_value(
         self, spark_session: pyspark.sql.SparkSession
@@ -107,7 +107,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Data mismatch\n  \n  Row = 1 : Column = col_b\n  \n  ACTUAL: demo\n  EXPECTED: demo1",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_string_value_where_one_of_the_value_is_Null(
         self, spark_session: pyspark.sql.SparkSession
@@ -144,7 +144,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Data mismatch\n  \n  Row = 1 : Column = col_b\n  \n  ACTUAL: demo\n  EXPECTED: None",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_date_value(
         self, spark_session: pyspark.sql.SparkSession
@@ -181,7 +181,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Data mismatch\n  \n  Row = 1 : Column = col_a\n  \n  ACTUAL: 2020-01-01\n  EXPECTED: 2020-01-03",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_long_value(
         self, spark_session: pyspark.sql.SparkSession
@@ -218,7 +218,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Data mismatch\n  \n  Row = 1 : Column = col_d\n  \n  ACTUAL: 10\n  EXPECTED: 20",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_double_value(
         self, spark_session: pyspark.sql.SparkSession
@@ -255,7 +255,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Data mismatch\n  \n  Row = 1 : Column = col_c\n  \n  ACTUAL: 1.123\n  EXPECTED: 1.1236",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_columns(
         self, spark_session: pyspark.sql.SparkSession
@@ -285,7 +285,7 @@ class TestAssertPysparkDfEqual:
             ),
         )
         with pytest.raises(AssertionError, match="df schema type mismatch"):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_assert_pyspark_df_equal_different_row_count(
         self, spark_session: pyspark.sql.SparkSession
@@ -323,7 +323,7 @@ class TestAssertPysparkDfEqual:
             AssertionError,
             match="Number of rows are not same.\n  \n  Actual Rows: 2\n  Expected Rows: 3",
         ):
-            dfs_equal(left_df, right_df)
+            assert_dfs_equal(left_df, right_df)
 
     def test_instance_checks_for_spark_connect(
             self, spark_session: pyspark.sql.SparkSession

@@ -12,7 +12,7 @@ from pyspark.sql.types import (
 )
 
 from pyspark_val.create import df_from_dict
-from pyspark_val.assertion import dfs_equal
+from pyspark_val.assertion import assert_dfs_equal
 
 def test_simple(spark_session: SparkSession):
     expect = spark_session.createDataFrame(
@@ -40,7 +40,7 @@ def test_simple(spark_session: SparkSession):
         }
     )
 
-    dfs_equal(test, expect)
+    assert_dfs_equal(test, expect)
 
 def test_null(spark_session: SparkSession):
     expect = spark_session.createDataFrame(
@@ -68,7 +68,7 @@ def test_null(spark_session: SparkSession):
         }
     )
 
-    dfs_equal(test, expect)
+    assert_dfs_equal(test, expect)
 
 def test_with_schema(spark_session: SparkSession):
     expect = spark_session.createDataFrame(
@@ -95,4 +95,4 @@ def test_with_schema(spark_session: SparkSession):
         }
     )
 
-    dfs_equal(test, expect)
+    assert_dfs_equal(test, expect)
